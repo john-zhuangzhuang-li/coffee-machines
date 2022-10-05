@@ -1,18 +1,26 @@
 import { chakra } from "@chakra-ui/react";
+import Card from "./Card";
+
+import { DUMMY_DATA } from "./dummy";
 
 const MainSection = chakra("main", {
   baseStyle: {
     bg: "#fff",
     gridColumn: "center",
-    display: "flex",
-    color: "#000",
+    display: "grid",
+    gridTemplateColumns: "repeat(3, minmax(min-content, 1fr))",
+    rowGap: "1.5rem",
+    columnGap: "1.5rem",
   },
 });
 
 const Main = () => {
   return (
     <MainSection>
-      <h3>THIS WILL BE MAIN</h3>
+      {DUMMY_DATA.map((item) => {
+        const { id, src } = item;
+        return <Card key={`image-${id}`} imageSrc={src} />;
+      })}
     </MainSection>
   );
 };
