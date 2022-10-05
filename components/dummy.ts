@@ -24,5 +24,9 @@ export const DUMMY_DATA = DUMMY_NUM.map((item, index) => {
   return {
     id: item,
     src,
+    author: "Place Holder",
+    authorLink: "https://github.com/john-zhuangzhuang-li/coffee-machines",
+    company: "Unknown",
+    companyLink: "https://github.com/john-zhuangzhuang-li/coffee-machines",
   };
 });

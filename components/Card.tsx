@@ -1,12 +1,24 @@
-import { Grid, GridItem, Heading, Icon, Box } from "@chakra-ui/react";
+import { Grid, GridItem, Icon, Box, Text, Link } from "@chakra-ui/react";
 import { RiUnsplashFill } from "react-icons/ri";
 import NextImage from "next/image";
 
 type Props = {
+  imageId: string;
   imageSrc: string;
+  authorName: string;
+  authorLink: string;
+  companyLink: string;
+  onImgClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 };
 
-const Card = ({ imageSrc }: Props) => {
+const Card = ({
+  imageId,
+  imageSrc,
+  authorName,
+  authorLink,
+  companyLink,
+  onImgClick,
+}: Props) => {
   return (
     <Grid
       templateRows="1fr min-content"
@@ -24,6 +36,8 @@ const Card = ({ imageSrc }: Props) => {
             transform: "scale(1.1)",
           },
         }}
+        onClick={onImgClick}
+        data-img-id={imageId}
       >
         <Box
           as="figure"
@@ -43,13 +57,21 @@ const Card = ({ imageSrc }: Props) => {
         color="gray.900"
         display="flex"
         justifyContent="space-between"
-        alignItems="center"
+        alignItems="flex-start"
         p={3}
       >
-        <Heading as="h5" size="xs">
+        {/* <Heading as="h5" size="xs">
           Box here
-        </Heading>
-        <Icon as={RiUnsplashFill} w={5} h={5} />
+        </Heading> */}
+        <Text fontSize="sm" noOfLines={1}>
+          {`Photo by `}
+          <Link href={authorLink} isExternal>
+            {authorName}
+          </Link>
+        </Text>
+        <Link href={companyLink} isExternal>
+          <Icon as={RiUnsplashFill} w={5} h={5} />
+        </Link>
       </GridItem>
     </Grid>
   );

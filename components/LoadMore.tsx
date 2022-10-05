@@ -8,8 +8,7 @@ const LoadMore = () => {
       gridColumn="center"
       justifyContent="center"
       alignItems="center"
-      bg="teal"
-      color="white"
+      py={6}
     >
       <Button
         colorScheme="blue"
