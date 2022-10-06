@@ -11,7 +11,7 @@ const LoadMore = () => {
       py={6}
     >
       <Button
-        colorScheme="blue"
+        colorScheme="teal"
         size="md"
         textTransform="uppercase"
         rightIcon={<RepeatIcon />}

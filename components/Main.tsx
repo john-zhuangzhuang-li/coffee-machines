@@ -1,34 +1,10 @@
 import { useState } from "react";
-import { chakra } from "@chakra-ui/react";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Box,
-  Button,
-  Image,
-} from "@chakra-ui/react";
-// import NextImage from "next/image";
+import { Grid, useDisclosure } from "@chakra-ui/react";
+
 import Card from "./Card";
 import ImgModal from "./ImgModal";
 
 import { DUMMY_DATA } from "./dummy";
-
-const MainSection = chakra("main", {
-  baseStyle: {
-    // bg: "#fff",
-    gridColumn: "center",
-    display: "grid",
-    gridTemplateColumns: "repeat(3, minmax(min-content, 1fr))",
-    rowGap: "1.5rem",
-    columnGap: "1.5rem",
-  },
-});
 
 const Main = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +26,16 @@ const Main = () => {
 
   return (
     <>
-      <MainSection>
+      <Grid
+        as="main"
+        gridColumn="center"
+        gap={6}
+        templateColumns={{
+          base: "1fr",
+          md: "repeat(2, minmax(min-content, 1fr))",
+          lg: "repeat(3, minmax(min-content, 1fr))",
+        }}
+      >
         {DUMMY_DATA.map((item) => {
           const { id, src, author, authorLink, companyLink } = item;
           return (
@@ -65,27 +50,8 @@ const Main = () => {
             />
           );
         })}
-      </MainSection>
+      </Grid>
       <ImgModal isOpen={isOpen} onClose={onClose} modalImgSrc={modalImgSrc} />
-      {/* <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        size="xl"
-        isCentered
-        scrollBehavior="inside"
-      >
-        <ModalOverlay />
-        <ModalContent overflow="hidden">
-          <ModalBody p={0}>
-            {modalImgSrc && <Image src={modalImgSrc} />}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */}
     </>
   );
 };

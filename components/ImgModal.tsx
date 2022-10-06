@@ -53,7 +53,7 @@ const ImgModal = ({ isOpen, onClose, modalImgSrc }: Props) => {
               Source
             </Button>
           </Link>
-          <Button colorScheme="blue" onClick={onClose}>
+          <Button colorScheme="teal" onClick={onClose}>
             Close
           </Button>
         </ModalFooter>

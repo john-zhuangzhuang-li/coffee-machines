@@ -9,14 +9,12 @@ type Props = {
 const Container = chakra("div", {
   baseStyle: {
     minH: "100vh",
-    // bg: "#eee",
     display: "grid",
-    rowGap: "1.5rem",
-    columnGap: "1.5rem",
+    rowGap: 6,
+    columnGap: 6,
     gridTemplateColumns:
       "minmax(0, 1fr) [center-start] minmax(min-content, 75rem) [center-end] minmax(0, 1fr)",
     gridAutoFlow: "column",
-    // color: "#fff",
   },
 });
 

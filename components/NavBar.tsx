@@ -12,35 +12,38 @@ import { FaCoffee } from "react-icons/fa";
 
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <Flex
       as="nav"
       pos="sticky"
       top="0"
-      bg="blue.600"
-      color="white"
-      gridColumn="center"
+      bg="bgNavBar"
+      backdropFilter="auto"
+      backdropBlur="10px"
+      gridColumn={{ base: "1 / -1", md: "center" }}
       justifyContent="center"
       alignItems="center"
-      p={3}
+      px={{ base: 6, md: 0 }}
+      py={3}
       columnGap={3}
       zIndex={2}
     >
-      <Icon as={FaCoffee} w={5} h={5} />
+      <Icon as={FaCoffee} w={5} h={5} color="accent" />
       <Heading as="h4" size="md" noOfLines={1}>
         Bottomless
       </Heading>
       <Spacer />
       {colorMode === "light" ? (
         <IconButton
-          colorScheme="pink"
+          colorScheme="gray"
           aria-label="Toggle color mode"
           icon={<MoonIcon />}
           onClick={toggleColorMode}
         />
       ) : (
         <IconButton
-          colorScheme="pink"
+          colorScheme="gray"
           aria-label="Toggle color mode"
           icon={<SunIcon />}
           onClick={toggleColorMode}

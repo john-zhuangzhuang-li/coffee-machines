@@ -1,17 +1,4 @@
-import { chakra, Heading, Container, Flex } from "@chakra-ui/react";
-
-// const HeaderSection = chakra("header", {
-//   baseStyle: {
-//     bg: "#333",
-//     gridColumn: "center",
-//     display: "flex",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     flexDirection: "column",
-//     rowGap: "1.5rem",
-//     color: "#fff",
-//   },
-// });
+import { Heading, Flex, Text } from "@chakra-ui/react";
 
 const Header = () => {
   return (
@@ -20,15 +7,15 @@ const Header = () => {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
-      rowGap="1.5rem"
+      rowGap={3}
+      py={6}
     >
-      <Heading as="h1" size="3xl" noOfLines={1}>
+      <Heading as="h1" size={{ base: "2xl", sm: "3xl" }} noOfLines={1}>
         Cup Bottomless
       </Heading>
-      <Container maxW="md">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
-        dolorum quisquam nobis eum asperiores!
-      </Container>
+      <Text as="h2" size="md" noOfLines={1}>
+        A collection of stylish coffee makers
+      </Text>
     </Flex>
   );
 };

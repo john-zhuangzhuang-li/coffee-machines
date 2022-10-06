@@ -25,12 +25,13 @@ const Card = ({
       borderRadius="lg"
       h="20rem"
       overflow="hidden"
+      bg="bgCard"
     >
       <GridItem
         gridColumn="1 / -1"
         gridRow="1 / 2"
-        bg="tomato"
         overflow="hidden"
+        cursor="pointer"
         sx={{
           "&:hover > figure": {
             transform: "scale(1.1)",
@@ -53,8 +54,8 @@ const Card = ({
       <GridItem
         gridColumn="1 / -1"
         gridRow="2 / 3"
-        bg="gray.300"
-        color="gray.900"
+        // bg="gray.300"
+        // color="gray.900"
         display="flex"
         justifyContent="space-between"
         alignItems="flex-start"
