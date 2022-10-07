@@ -7,6 +7,7 @@ const Header = () => {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
+      zIndex={1}
       rowGap={3}
       py={6}
     >

@@ -29,6 +29,7 @@ const Main = () => {
       <Grid
         as="main"
         gridColumn="center"
+        zIndex={1}
         gap={6}
         templateColumns={{
           base: "1fr",

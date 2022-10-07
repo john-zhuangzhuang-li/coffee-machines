@@ -4,10 +4,14 @@ import {
   IconButton,
   useColorMode,
   Heading,
-  Link,
   Icon,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import { SettingsIcon, LockIcon, SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { FaCoffee } from "react-icons/fa";
 
 const NavBar = () => {
@@ -29,21 +33,49 @@ const NavBar = () => {
       columnGap={3}
       zIndex={2}
     >
-      <Icon as={FaCoffee} w={5} h={5} color="accent" />
-      <Heading as="h4" size="md" noOfLines={1}>
-        Bottomless
-      </Heading>
+      <IconButton
+        variant="ghost"
+        aria-label="Logo"
+        icon={<Icon as={FaCoffee} w={5} h={5} color="accent" />}
+        display={{ base: "flex", sm: "none" }}
+        onClick={() => window.scrollTo(0, 0)}
+      />
+      <Button
+        leftIcon={<Icon as={FaCoffee} w={5} h={5} color="accent" />}
+        variant="ghost"
+        display={{ base: "none", sm: "flex" }}
+        onClick={() => window.scrollTo(0, 0)}
+      >
+        <Heading as="h2" size="md" noOfLines={1}>
+          Bottomless
+        </Heading>
+      </Button>
+
       <Spacer />
+      <Menu>
+        <MenuButton
+          as={Button}
+          aria-label="Admin menu"
+          rightIcon={<SettingsIcon />}
+        >
+          Admin
+        </MenuButton>
+        <MenuList>
+          <MenuItem icon={<LockIcon />}>Sign-in</MenuItem>
+          <MenuItem icon={<LockIcon />}>Upload</MenuItem>
+        </MenuList>
+      </Menu>
+
       {colorMode === "light" ? (
         <IconButton
-          colorScheme="gray"
+          colorScheme="teal"
           aria-label="Toggle color mode"
           icon={<MoonIcon />}
           onClick={toggleColorMode}
         />
       ) : (
         <IconButton
-          colorScheme="gray"
+          colorScheme="teal"
           aria-label="Toggle color mode"
           icon={<SunIcon />}
           onClick={toggleColorMode}
