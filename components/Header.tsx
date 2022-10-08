@@ -3,6 +3,7 @@ import { Heading, Flex, Text } from "@chakra-ui/react";
 const Header = () => {
   return (
     <Flex
+      as="header"
       gridColumn="center"
       justifyContent="center"
       alignItems="center"

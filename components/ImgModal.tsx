@@ -1,12 +1,11 @@
+import { useRef } from "react";
+
 import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
-  useDisclosure,
   Box,
   Button,
   Image,
@@ -23,6 +22,8 @@ type Props = {
 };
 
 const ImgModal = ({ isOpen, onClose, modalImgSrc }: Props) => {
+  const initialRef = useRef<HTMLButtonElement>(null);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -30,11 +31,10 @@ const ImgModal = ({ isOpen, onClose, modalImgSrc }: Props) => {
       size="xl"
       isCentered
       scrollBehavior="inside"
+      initialFocusRef={initialRef}
     >
       <ModalOverlay />
       <ModalContent overflow="hidden">
-        {/* <ModalHeader></ModalHeader> */}
-        {/* <ModalCloseButton /> */}
         <ModalBody p={0}>
           {modalImgSrc && <Image src={modalImgSrc} />}
           <Box p={3}>
@@ -53,7 +53,7 @@ const ImgModal = ({ isOpen, onClose, modalImgSrc }: Props) => {
               Source
             </Button>
           </Link>
-          <Button colorScheme="teal" onClick={onClose}>
+          <Button ref={initialRef} colorScheme="teal" onClick={onClose}>
             Close
           </Button>
         </ModalFooter>

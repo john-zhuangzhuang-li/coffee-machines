@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   signOut,
   User,
+  UserCredential,
 } from "firebase/auth";
 
 type UserProviderProps = {
@@ -12,43 +13,22 @@ type UserProviderProps = {
 };
 
 interface UserContextInterface {
-  user: User;
-  isLoading: boolean;
-  error: boolean;
-  userSignIn: (email: string, password: string) => void;
-  userSignOut: () => void;
+  user: User | null;
+  userSignIn: (email: string, password: string) => Promise<UserCredential>;
+  userSignOut: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextInterface | null>(null);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
 
-  const userSignIn = async (email: string, password: string) => {
-    try {
-      setIsLoading(true);
-      const userData = await signInWithEmailAndPassword(auth, email, password);
-      if (!userData) throw new Error("User sign-in failed");
-      setUser(userData);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-      setError(true);
-    }
+  const userSignIn = (email: string, password: string) => {
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const userSignOut = async () => {
-    try {
-      setIsLoading(true);
-      await signOut(auth);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
+  const userSignOut = () => {
+    return signOut(auth);
   };
 
   useEffect(() => {
@@ -61,8 +41,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const userState = {
     user,
-    isLoading,
-    error,
     userSignIn,
     userSignOut,
   };
@@ -74,12 +52,10 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
 export const useUserContext = () => {
   const userState = useContext(UserContext);
-  if (!userState) return null;
-  const { user, isLoading, error, userSignIn, userSignOut } = userState;
+  if (!userState) return {};
+  const { user, userSignIn, userSignOut } = userState;
   return {
     user,
-    isLoading,
-    error,
     userSignIn,
     userSignOut,
   };

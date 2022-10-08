@@ -4,6 +4,7 @@ import { RiGithubFill } from "react-icons/ri";
 const Footer = () => {
   return (
     <Flex
+      as="footer"
       gridColumn={{ base: "1 / -1", md: "center" }}
       flexDirection="column"
       justifyContent="center"

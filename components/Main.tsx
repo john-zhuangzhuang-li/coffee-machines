@@ -19,7 +19,6 @@ const Main = () => {
     if (!currentImg) return;
     const { src } = currentImg;
     if (!src) return;
-    console.log(src);
     setModalImgSrc(src);
     onOpen();
   };

@@ -11,11 +11,34 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import { SettingsIcon, LockIcon, SunIcon, MoonIcon } from "@chakra-ui/icons";
+import {
+  SettingsIcon,
+  LockIcon,
+  UnlockIcon,
+  SunIcon,
+  MoonIcon,
+} from "@chakra-ui/icons";
 import { FaCoffee } from "react-icons/fa";
 
-const NavBar = () => {
+import { useUserContext } from "../util/UserContext";
+
+type Props = {
+  onSignInOpen: () => void;
+};
+
+const NavBar = ({ onSignInOpen }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { user, userSignOut } = useUserContext();
+
+  const handleSignOut = async () => {
+    if (!userSignOut) return;
+    try {
+      await userSignOut();
+      console.log("SIGN OUT SUCCESSFUL");
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <Flex
@@ -61,11 +84,23 @@ const NavBar = () => {
           Admin
         </MenuButton>
         <MenuList>
-          <MenuItem icon={<LockIcon />}>Sign-in</MenuItem>
-          <MenuItem icon={<LockIcon />}>Upload</MenuItem>
+          {user ? (
+            <MenuItem icon={<UnlockIcon />} onClick={handleSignOut}>
+              Sign-out
+            </MenuItem>
+          ) : (
+            <MenuItem icon={<LockIcon />} onClick={onSignInOpen}>
+              Sign-in
+            </MenuItem>
+          )}
+          <MenuItem
+            icon={user ? <UnlockIcon /> : <LockIcon />}
+            isDisabled={!user}
+          >
+            Upload
+          </MenuItem>
         </MenuList>
       </Menu>
-
       {colorMode === "light" ? (
         <IconButton
           colorScheme="teal"

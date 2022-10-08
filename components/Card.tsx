@@ -54,16 +54,11 @@ const Card = ({
       <GridItem
         gridColumn="1 / -1"
         gridRow="2 / 3"
-        // bg="gray.300"
-        // color="gray.900"
         display="flex"
         justifyContent="space-between"
         alignItems="flex-start"
         p={3}
       >
-        {/* <Heading as="h5" size="xs">
-          Box here
-        </Heading> */}
         <Text fontSize="sm" noOfLines={1}>
           {`Photo by `}
           <Link href={authorLink} isExternal>
