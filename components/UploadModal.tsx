@@ -1,7 +1,8 @@
 import { useState, useRef, FormEvent } from "react";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from "../util/firebase";
+import { ref as refDB, set } from "firebase/database";
+import { storage, database } from "../util/firebase";
 
 import {
   Modal,
@@ -32,6 +33,16 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+// interface imgDataModel {
+//   id: string;
+//   url: string;
+//   path: string;
+//   artist: string;
+//   artistUrl: string;
+//   company: string;
+//   companyUrl: string;
+// }
 
 const handleUnsplashCreditSplit = (credit: string) => {
   const splitCredit = credit.split(` on `);
@@ -80,8 +91,11 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
     if (!files) return;
     const file = files[0];
     if (!file) return;
+    const { name } = file;
+    const id = name.substring(0, name.lastIndexOf("."));
+    if (!id) return;
     setLoading(true);
-    const path = `test/${file.name}`;
+    const path = `test/${name}`;
     const storageRef = ref(storage, path);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -103,33 +117,36 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         // Handle successful uploads on complete
-        console.log("UPLOAD SUCCESS");
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          const creditInfo = handleUnsplashCreditSplit(creditValue);
-          const uploadInfo = {
-            ...creditInfo,
-            imgUrl: downloadURL,
-            imgPath: path,
-          };
-          console.log(uploadInfo);
-          if (fileRef.current?.value) fileRef.current.value = "";
-          handleClearCredit();
-          setLoading(false);
-        });
+        console.log("UPLOAD COMPLETED");
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            const creditInfo = handleUnsplashCreditSplit(creditValue);
+            const uploadData = {
+              ...creditInfo,
+              id,
+              url: downloadURL,
+              path,
+            };
+            console.log(uploadData);
+            return set(refDB(database, `test/${uploadData.id}`), uploadData);
+          })
+          .then(() => {
+            console.log("DATABASE UPDATE COMPLETED");
+            if (fileRef.current?.value) fileRef.current.value = "";
+            handleClearCredit();
+            setLoading(false);
+          })
+          .catch((error: any) => {
+            console.log("DATABASE UPDATE ERROR");
+            console.log(error);
+            setUploadError("An error occurred while updating database");
+            setLoading(false);
+          });
       }
     );
 
-    // LOOKS GOOD, NOW JUST NEED TO PUSH THE SPLIT VALUES INTO DB
-    // AND PUSH FILE INTO STORAGE AT SAME TIME
-    // AND HANDLE LOADING STAT
-    // CONSIDER OUTSOURCE THE SPLIT FN TO A DUMMY FILE SINCE ITS UNRELATED
-
     // TO DO: COULD CREATE A PREVIEW AND GET NATURAL PIXELS FROM IT FOR NEXT
     // TO DO: add a library to optimize image before upload, perhaps add a checkbox to select
-
-    // console.log(handleUnsplashCreditSplit(creditValue));
-
-    // handleClearCredit();
   };
 
   const handleModalClose = () => {
@@ -197,7 +214,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
               <FormErrorMessage>{creditHelperText}</FormErrorMessage>
             )}
             {Boolean(uploadError) && (
-              <FormErrorMessage>{uploadError}</FormErrorMessage>
+              <FormHelperText color="textError">{uploadError}</FormHelperText>
             )}
           </FormControl>
           {loading && (

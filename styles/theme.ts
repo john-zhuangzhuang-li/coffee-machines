@@ -21,6 +21,10 @@ const theme = extendTheme({
         default: "gray.100",
         _dark: "whiteAlpha.200",
       },
+      textError: {
+        default: "red.500",
+        _dark: "red.300",
+      },
     },
   },
 });
