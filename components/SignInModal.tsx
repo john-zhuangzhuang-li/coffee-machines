@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent, FormEvent } from "react";
+import { useState, useRef, FormEvent } from "react";
 
 import {
   Modal,
@@ -12,16 +12,21 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  FormHelperText,
   Input,
   InputGroup,
   InputRightElement,
   IconButton,
-  Icon,
+  Text,
 } from "@chakra-ui/react";
 
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import {
+  ViewIcon,
+  ViewOffIcon,
+  WarningTwoIcon,
+  CheckCircleIcon,
+} from "@chakra-ui/icons";
 import { useUserContext } from "../util/UserContext";
+import useInputValidation from "../util/useInputValidation";
 
 type Props = {
   isOpen: boolean;
@@ -36,69 +41,158 @@ const SignInModal = ({ isOpen, onClose }: Props) => {
     setShowPassword((prev) => !prev);
   };
 
-  const [emailValue, setEmailValue] = useState("");
-  const [passwordValue, setPasswordValue] = useState("");
+  const {
+    inputValue: emailValue,
+    isValid: emailIsValid,
+    helperText: emailHelperText,
+    handleInputChange: handleEmailChange,
+    handleClearInput: handleClearEmail,
+  } = useInputValidation({ max: 30, format: "email" });
 
-  const handleEmailValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmailValue(event.currentTarget.value);
-  };
-  const handlePasswordValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPasswordValue(event.currentTarget.value);
-  };
+  const {
+    inputValue: passwordValue,
+    isValid: passwordIsValid,
+    helperText: passwordHelperText,
+    handleInputChange: handlePassowrdChange,
+    handleClearInput: handleClearPassowrd,
+  } = useInputValidation({ max: 30 });
 
-  const { userSignIn } = useUserContext();
+  const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  const { user, userSignIn } = useUserContext();
   const handleSubmit = async (event: FormEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (!userSignIn) return;
+    setLoading(true);
     try {
       await userSignIn(emailValue, passwordValue);
       console.log("SIGN IN SUCCESSFUL");
+      handleClearEmail();
+      handleClearPassowrd();
+      setLoading(false);
     } catch (error: any) {
       console.log(error.message);
+      setAuthError("An error occurred while authenticating");
+      setLoading(false);
     }
   };
 
+  const handleModalClose = () => {
+    onClose();
+    if (authError) setAuthError("");
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleModalClose}
+      initialFocusRef={initialRef}
+      closeOnOverlayClick={!loading}
+      closeOnEsc={!loading}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Admin Sign-in</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody as="form" id="sign-in-form" onSubmit={handleSubmit}>
-          <FormControl as="fieldset">
-            <FormLabel>Email</FormLabel>
-            <Input
-              placeholder="email@example.com"
-              value={emailValue}
-              onChange={handleEmailValueChange}
-              ref={initialRef}
-            />
-          </FormControl>
-          <FormControl mt={3} as="fieldset">
-            <FormLabel>Password</FormLabel>
-            <InputGroup>
+        <ModalCloseButton isDisabled={loading} />
+        {authError && (
+          <ModalBody
+            display="flex"
+            justifyContent="center"
+            flexDir="column"
+            alignItems="center"
+            rowGap={3}
+          >
+            <WarningTwoIcon w={8} h={8} />
+            <Text size="md">Invalid credentials 😨</Text>
+          </ModalBody>
+        )}
+        {!authError && user && (
+          <ModalBody
+            display="flex"
+            justifyContent="center"
+            flexDir="column"
+            alignItems="center"
+            rowGap={3}
+            mt={3}
+          >
+            <CheckCircleIcon w={8} h={8} />
+            <Text size="md">Welcome back 😋</Text>
+          </ModalBody>
+        )}
+        {!authError && !user && (
+          <ModalBody as="form" id="sign-in-form" onSubmit={handleSubmit}>
+            <FormControl as="fieldset" isInvalid={Boolean(emailHelperText)}>
+              <FormLabel>Email</FormLabel>
               <Input
-                placeholder="Password"
-                type={showPassword ? "text" : "password"}
-                value={passwordValue}
-                onChange={handlePasswordValueChange}
+                placeholder="email@example.com"
+                value={emailValue}
+                onChange={handleEmailChange}
+                ref={initialRef}
+                isDisabled={loading}
               />
-              <InputRightElement>
-                <IconButton
-                  aria-label="Toggle password display"
-                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={handlePasswordDisplayToggle}
+              {Boolean(emailHelperText) && (
+                <FormErrorMessage>{emailHelperText}</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl
+              mt={3}
+              as="fieldset"
+              isInvalid={Boolean(passwordHelperText)}
+            >
+              <FormLabel>Password</FormLabel>
+              <InputGroup>
+                <Input
+                  placeholder="Password"
+                  type={showPassword ? "text" : "password"}
+                  value={passwordValue}
+                  onChange={handlePassowrdChange}
+                  isDisabled={loading}
                 />
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
-        </ModalBody>
-
+                <InputRightElement>
+                  <IconButton
+                    aria-label="Toggle password display"
+                    icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    size="sm"
+                    onClick={handlePasswordDisplayToggle}
+                    isDisabled={loading}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              {Boolean(passwordHelperText) && (
+                <FormErrorMessage>{passwordHelperText}</FormErrorMessage>
+              )}
+            </FormControl>
+          </ModalBody>
+        )}
         <ModalFooter>
-          <Button colorScheme="teal" mr={3} type="submit" form="sign-in-form">
-            Sign-in
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
+          {authError && (
+            <Button
+              colorScheme="teal"
+              mr={3}
+              isDisabled={loading}
+              onClick={() => setAuthError("")}
+            >
+              Retry
+            </Button>
+          )}
+          {!authError && !user && (
+            <Button
+              colorScheme="teal"
+              mr={3}
+              type="submit"
+              form="sign-in-form"
+              isLoading={loading}
+              isDisabled={loading || !emailIsValid || !passwordIsValid}
+            >
+              Sign-in
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            onClick={handleModalClose}
+            isDisabled={loading}
+          >
             Close
           </Button>
         </ModalFooter>

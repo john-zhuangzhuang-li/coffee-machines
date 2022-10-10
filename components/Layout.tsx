@@ -2,6 +2,7 @@ import { chakra, useDisclosure } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import SignInModal from "./SignInModal";
+import UploadModal from "./UploadModal";
 
 type Props = {
   children?: React.ReactNode;
@@ -25,11 +26,19 @@ const Layout = ({ children }: Props) => {
     onOpen: onSignInOpen,
     onClose: onSignInClose,
   } = useDisclosure();
+
+  const {
+    isOpen: uploadOpen,
+    onOpen: onUploadOpen,
+    onClose: onUploadClose,
+  } = useDisclosure();
+
   return (
     <>
       <Container>
-        <NavBar onSignInOpen={onSignInOpen} />
+        <NavBar onSignInOpen={onSignInOpen} onUploadOpen={onUploadOpen} />
         <SignInModal isOpen={signInOpen} onClose={onSignInClose} />
+        <UploadModal isOpen={uploadOpen} onClose={onUploadClose} />
         {children}
         <Footer />
       </Container>

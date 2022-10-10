@@ -24,9 +24,10 @@ import { useUserContext } from "../util/UserContext";
 
 type Props = {
   onSignInOpen: () => void;
+  onUploadOpen: () => void;
 };
 
-const NavBar = ({ onSignInOpen }: Props) => {
+const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { user, userSignOut } = useUserContext();
 
@@ -73,7 +74,6 @@ const NavBar = ({ onSignInOpen }: Props) => {
           Bottomless
         </Heading>
       </Button>
-
       <Spacer />
       <Menu>
         <MenuButton
@@ -96,6 +96,7 @@ const NavBar = ({ onSignInOpen }: Props) => {
           <MenuItem
             icon={user ? <UnlockIcon /> : <LockIcon />}
             isDisabled={!user}
+            onClick={onUploadOpen}
           >
             Upload
           </MenuItem>
