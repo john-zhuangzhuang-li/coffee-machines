@@ -21,13 +21,13 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
-  Text,
   Progress,
 } from "@chakra-ui/react";
 
 import { DeleteIcon } from "@chakra-ui/icons";
 
 import useInputValidation from "../util/useInputValidation";
+import { resizeImage, handleUnsplashCreditSplit } from "../util/util";
 
 type Props = {
   isOpen: boolean;
@@ -43,31 +43,6 @@ type Props = {
 //   company: string;
 //   companyUrl: string;
 // }
-
-const handleUnsplashCreditSplit = (credit: string) => {
-  const splitCredit = credit.split(` on `);
-  const parsedCredit = splitCredit.map((credit) => {
-    const indexFirstQuote = credit.indexOf(`"`);
-    const indexLastQuote = credit.lastIndexOf(`"`);
-    const url = credit.slice(indexFirstQuote + 1, indexLastQuote);
-    const indexFirstRightAngleBracket = credit.indexOf(`>`);
-    const indexLastLeftAngleBracket = credit.lastIndexOf(`<`);
-    const text = credit.slice(
-      indexFirstRightAngleBracket + 1,
-      indexLastLeftAngleBracket
-    );
-    return { url, text };
-  });
-  const { text: artist, url: artistUrl } = parsedCredit[0];
-  const { text: company, url: companyUrl } =
-    parsedCredit[parsedCredit.length - 1];
-  return {
-    artist,
-    artistUrl,
-    company,
-    companyUrl,
-  };
-};
 
 const UploadModal = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
@@ -85,7 +60,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
     handleClearInput: handleClearCredit,
   } = useInputValidation({ max: 500, process: "unsplash" });
 
-  const handleSubmit = (event: FormEvent<HTMLDivElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLDivElement>) => {
     event.preventDefault();
     const files = fileRef.current?.files;
     if (!files) return;
@@ -95,9 +70,21 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
     const id = name.substring(0, name.lastIndexOf("."));
     if (!id) return;
     setLoading(true);
-    const path = `test/${name}`;
+
+    const optimizedFile = await resizeImage(file);
+    console.log("COMPRESS COMPLETED");
+    // console.log(optimizedFile);
+
+    if (!optimizedFile || !(optimizedFile instanceof File)) {
+      console.log("COMPRESS ERROR");
+      setUploadError("An error occurred while optimizing image");
+      setLoading(false);
+      return;
+    }
+
+    const path = `test/${optimizedFile.name}`;
     const storageRef = ref(storage, path);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    const uploadTask = uploadBytesResumable(storageRef, optimizedFile);
 
     uploadTask.on(
       "state_changed",
@@ -173,14 +160,10 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
               type="file"
               ref={fileRef}
               accept="image/*"
-              isDisabled={loading || Boolean(uploadError)}
+              isDisabled={loading || !!uploadError}
             />
           </FormControl>
-          <FormControl
-            mt={3}
-            as="fieldset"
-            isInvalid={Boolean(creditHelperText)}
-          >
+          <FormControl mt={3} as="fieldset" isInvalid={!!creditHelperText}>
             <FormLabel>Credit</FormLabel>
             <InputGroup>
               <Input
@@ -188,7 +171,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
                 value={creditValue}
                 onChange={handleCreditChange}
                 ref={creditRef}
-                isDisabled={loading || Boolean(uploadError)}
+                isDisabled={loading || !!uploadError}
               />
               <InputRightElement>
                 <IconButton
@@ -196,7 +179,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
                   icon={<DeleteIcon />}
                   size="sm"
                   onClick={handleClearCredit}
-                  isDisabled={loading || Boolean(uploadError)}
+                  isDisabled={loading || !!uploadError}
                 />
               </InputRightElement>
             </InputGroup>
@@ -204,16 +187,20 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
               <FormHelperText>
                 {!loading && "Paste directly from clipboard"}
                 {loading &&
+                  uploadProgress < 1 &&
+                  "Optimizing image before upload..."}
+                {loading &&
+                  uploadProgress >= 1 &&
                   uploadProgress < 99 &&
-                  "Uploading image to storage..."}
+                  "Uploading image to cloud storage..."}
                 {loading &&
                   uploadProgress >= 99 &&
-                  "Updating info to database..."}
+                  "Updating information to database..."}
               </FormHelperText>
             ) : (
               <FormErrorMessage>{creditHelperText}</FormErrorMessage>
             )}
-            {Boolean(uploadError) && (
+            {!!uploadError && (
               <FormHelperText color="textError">{uploadError}</FormHelperText>
             )}
           </FormControl>
@@ -232,7 +219,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
             type="submit"
             form="upload-form"
             mr={3}
-            disabled={loading || !creditIsValid || Boolean(uploadError)}
+            disabled={loading || !creditIsValid || !!uploadError}
           >
             Upload
           </Button>

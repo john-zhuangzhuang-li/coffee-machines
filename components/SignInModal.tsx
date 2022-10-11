@@ -122,7 +122,7 @@ const SignInModal = ({ isOpen, onClose }: Props) => {
         )}
         {!authError && !user && (
           <ModalBody as="form" id="sign-in-form" onSubmit={handleSubmit}>
-            <FormControl as="fieldset" isInvalid={Boolean(emailHelperText)}>
+            <FormControl as="fieldset" isInvalid={!!emailHelperText}>
               <FormLabel>Email</FormLabel>
               <Input
                 placeholder="email@example.com"
@@ -131,15 +131,11 @@ const SignInModal = ({ isOpen, onClose }: Props) => {
                 ref={initialRef}
                 isDisabled={loading}
               />
-              {Boolean(emailHelperText) && (
+              {!!emailHelperText && (
                 <FormErrorMessage>{emailHelperText}</FormErrorMessage>
               )}
             </FormControl>
-            <FormControl
-              mt={3}
-              as="fieldset"
-              isInvalid={Boolean(passwordHelperText)}
-            >
+            <FormControl mt={3} as="fieldset" isInvalid={!!passwordHelperText}>
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input
@@ -159,7 +155,7 @@ const SignInModal = ({ isOpen, onClose }: Props) => {
                   />
                 </InputRightElement>
               </InputGroup>
-              {Boolean(passwordHelperText) && (
+              {!!passwordHelperText && (
                 <FormErrorMessage>{passwordHelperText}</FormErrorMessage>
               )}
             </FormControl>
