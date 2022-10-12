@@ -34,16 +34,6 @@ type Props = {
   onClose: () => void;
 };
 
-// interface imgDataModel {
-//   id: string;
-//   url: string;
-//   path: string;
-//   artist: string;
-//   artistUrl: string;
-//   company: string;
-//   companyUrl: string;
-// }
-
 const UploadModal = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -66,10 +56,13 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
     if (!files) return;
     const file = files[0];
     if (!file) return;
-    const { name } = file;
-    const id = name.substring(0, name.lastIndexOf("."));
-    if (!id) return;
+
     setLoading(true);
+
+    const { name } = file;
+    const imgName = name.substring(0, name.lastIndexOf("."));
+    const timeStamp = Date.now();
+    const keyStamp = Math.floor(timeStamp * Math.random());
 
     const optimizedFile = await resizeImage(file);
     console.log("COMPRESS COMPLETED");
@@ -82,7 +75,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    const path = `test/${optimizedFile.name}`;
+    const path = `test-2/${optimizedFile.name}`;
     const storageRef = ref(storage, path);
     const uploadTask = uploadBytesResumable(storageRef, optimizedFile);
 
@@ -99,6 +92,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
         // Handle unsuccessful uploads
         console.log("UPLOAD ERROR");
         console.log(error);
+        setUploadProgress(0);
         setUploadError("An error occurred while uploading to storage");
         setLoading(false);
       },
@@ -110,15 +104,17 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
             const creditInfo = handleUnsplashCreditSplit(creditValue);
             const uploadData = {
               ...creditInfo,
-              id,
+              id: `${imgName}-${keyStamp}`,
               url: downloadURL,
               path,
+              timeStamp,
             };
             console.log(uploadData);
-            return set(refDB(database, `test/${uploadData.id}`), uploadData);
+            return set(refDB(database, `test-2/${uploadData.id}`), uploadData);
           })
           .then(() => {
             console.log("DATABASE UPDATE COMPLETED");
+            setUploadProgress(0);
             if (fileRef.current?.value) fileRef.current.value = "";
             handleClearCredit();
             setLoading(false);
@@ -126,6 +122,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
           .catch((error: any) => {
             console.log("DATABASE UPDATE ERROR");
             console.log(error);
+            setUploadProgress(0);
             setUploadError("An error occurred while updating database");
             setLoading(false);
           });

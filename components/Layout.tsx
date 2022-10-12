@@ -3,9 +3,11 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import SignInModal from "./SignInModal";
 import UploadModal from "./UploadModal";
+import { imgDataModel } from "../util/types";
 
 type Props = {
   children?: React.ReactNode;
+  imgList?: imgDataModel[] | null;
 };
 
 const Container = chakra("div", {
@@ -20,7 +22,7 @@ const Container = chakra("div", {
   },
 });
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ children, imgList }: Props) => {
   const {
     isOpen: signInOpen,
     onOpen: onSignInOpen,
@@ -36,7 +38,11 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       <Container>
-        <NavBar onSignInOpen={onSignInOpen} onUploadOpen={onUploadOpen} />
+        <NavBar
+          onSignInOpen={onSignInOpen}
+          onUploadOpen={onUploadOpen}
+          imgList={imgList}
+        />
         <SignInModal isOpen={signInOpen} onClose={onSignInClose} />
         <UploadModal isOpen={uploadOpen} onClose={onUploadClose} />
         {children}

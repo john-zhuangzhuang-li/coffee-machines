@@ -1,22 +1,32 @@
-import { Grid, GridItem, Icon, Box, Text, Link } from "@chakra-ui/react";
+import { Grid, GridItem, Icon, Box, Text, Link, Image } from "@chakra-ui/react";
 import { RiUnsplashFill } from "react-icons/ri";
-import NextImage from "next/image";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+// import NextImage from "next/image";
 
-type Props = {
-  imageId: string;
-  imageSrc: string;
-  authorName: string;
-  authorLink: string;
-  companyLink: string;
+import { imgDataModel } from "../util/types";
+
+// type Props = {
+//   imageId: string;
+//   imageSrc: string;
+//   authorName: string;
+//   authorLink: string;
+//   companyLink: string;
+//   onImgClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+// };
+
+interface Props extends imgDataModel {
   onImgClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-};
+}
 
 const Card = ({
-  imageId,
-  imageSrc,
-  authorName,
-  authorLink,
-  companyLink,
+  id,
+  url,
+  path,
+  artist,
+  artistUrl,
+  company,
+  companyUrl,
+  timeStamp,
   onImgClick,
 }: Props) => {
   return (
@@ -38,17 +48,23 @@ const Card = ({
           },
         }}
         onClick={onImgClick}
-        data-img-id={imageId}
+        data-img-id={id}
+        // data-img-url={url}
+        // data-artist-url={artistUrl}
+        // data-time-stamp={timeStamp}
       >
         <Box
           as="figure"
           width="100%"
           height="100%"
           overflow="hidden"
-          position="relative"
+          // position="relative"
           transition="transform 0.2s ease-out"
+          bg={`url(${url})`}
+          bgSize="cover"
         >
-          <NextImage src={imageSrc} layout="fill" objectFit="cover" />
+          {/* <Image src={url} objectFit="cover" /> */}
+          {/* <NextImage src={url} layout="fill" objectFit="cover" /> */}
         </Box>
       </GridItem>
       <GridItem
@@ -61,12 +77,16 @@ const Card = ({
       >
         <Text fontSize="sm" noOfLines={1}>
           {`Photo by `}
-          <Link href={authorLink} isExternal>
-            {authorName}
+          <Link href={artistUrl} isExternal>
+            {artist}
           </Link>
         </Text>
-        <Link href={companyLink} isExternal>
-          <Icon as={RiUnsplashFill} w={5} h={5} />
+        <Link href={companyUrl} isExternal>
+          <Icon
+            as={company === "Unsplash" ? RiUnsplashFill : ExternalLinkIcon}
+            w={4}
+            h={4}
+          />
         </Link>
       </GridItem>
     </Grid>

@@ -8,24 +8,34 @@ import Main from "../components/Main";
 import Header from "../components/Header";
 import LoadMore from "../components/LoadMore";
 import { UserProvider } from "../util/UserContext";
+import { imgDataModel } from "../util/types";
 
 const Home: NextPage = () => {
   // WORK ON THIS AND USE A SIMPLE METHOD TO LOAD ALL DATA AT ONCE
 
-  // useEffect(() => {
-  //   const imageListRef = refDB(database, `path`);
-  //   const unsubscribe = onValue(imageListRef, (snapshot) => {
-  //     const data = snapshot.val();
+  const [imgList, setImgList] = useState<imgDataModel[] | null>(null);
 
-  //     return () => unsubscribe();
-  //   });
-  // }, []);
+  useEffect(() => {
+    const imageListRef = refDB(database, `test-2/`);
+    const unsubscribe = onValue(imageListRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+      // console.log(data);
+      const imgData: imgDataModel[] = Object.values(data);
+      // console.log(imgData);
+      imgData.sort((a, b) => b.timeStamp - a.timeStamp);
+      // console.log(imgData);
+      setImgList(imgData);
+
+      return () => unsubscribe();
+    });
+  }, []);
 
   return (
     <UserProvider>
-      <Layout>
+      <Layout imgList={imgList}>
         <Header />
-        <Main />
+        <Main imgList={imgList} />
         <LoadMore />
       </Layout>
     </UserProvider>

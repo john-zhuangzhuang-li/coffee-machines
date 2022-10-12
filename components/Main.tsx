@@ -4,22 +4,23 @@ import { Grid, useDisclosure } from "@chakra-ui/react";
 import Card from "./Card";
 import ImgModal from "./ImgModal";
 
-import { DUMMY_DATA } from "./dummy";
+import { imgDataModel } from "../util/types";
 
-const Main = () => {
+type Props = {
+  imgList?: imgDataModel[] | null;
+};
+
+const Main = ({ imgList }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [modalImgSrc, setModalImgSrc] = useState("");
+  const [modalImgId, setModalImgId] = useState("");
 
   const handleCardImgClick = (
     event: React.MouseEvent<HTMLDivElement>
   ): void => {
+    if (!imgList) return;
     const { imgId } = event.currentTarget.dataset;
     if (!imgId) return;
-    const currentImg = DUMMY_DATA.find((item) => item.id === imgId);
-    if (!currentImg) return;
-    const { src } = currentImg;
-    if (!src) return;
-    setModalImgSrc(src);
+    setModalImgId(imgId);
     onOpen();
   };
 
@@ -36,22 +37,19 @@ const Main = () => {
           lg: "repeat(3, minmax(min-content, 1fr))",
         }}
       >
-        {DUMMY_DATA.map((item) => {
-          const { id, src, author, authorLink, companyLink } = item;
-          return (
-            <Card
-              key={`image-${id}`}
-              imageId={id}
-              imageSrc={src}
-              authorName={author}
-              authorLink={authorLink}
-              companyLink={companyLink}
-              onImgClick={handleCardImgClick}
-            />
-          );
-        })}
+        {imgList &&
+          imgList.map((item) => (
+            <Card key={item.id} onImgClick={handleCardImgClick} {...item} />
+          ))}
       </Grid>
-      <ImgModal isOpen={isOpen} onClose={onClose} modalImgSrc={modalImgSrc} />
+      {imgList && (
+        <ImgModal
+          isOpen={isOpen}
+          onClose={onClose}
+          imgId={modalImgId}
+          imgList={imgList}
+        />
+      )}
     </>
   );
 };
