@@ -5,14 +5,13 @@ import Card from "./Card";
 import ImgModal from "./ImgModal";
 
 import { imgDataModel } from "../util/types";
-import { IMAGES_PER_LOAD } from "../util/util";
 
 type Props = {
   imgList?: imgDataModel[] | null;
-  loadStep: number;
+  currentLoad: number;
 };
 
-const Main = ({ imgList, loadStep }: Props) => {
+const Main = ({ imgList, currentLoad }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalImgId, setModalImgId] = useState("");
 
@@ -41,7 +40,7 @@ const Main = ({ imgList, loadStep }: Props) => {
       >
         {imgList &&
           imgList
-            .filter((item, index) => index <= loadStep * IMAGES_PER_LOAD - 1)
+            .filter((item, index) => index <= currentLoad - 1)
             .map((item) => (
               <Card key={item.id} onImgClick={handleCardImgClick} {...item} />
             ))}

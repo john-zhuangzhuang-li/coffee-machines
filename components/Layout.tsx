@@ -38,11 +38,7 @@ const Layout = ({ children, imgList }: Props) => {
   return (
     <>
       <Container>
-        <NavBar
-          onSignInOpen={onSignInOpen}
-          onUploadOpen={onUploadOpen}
-          imgList={imgList}
-        />
+        <NavBar onSignInOpen={onSignInOpen} onUploadOpen={onUploadOpen} />
         <SignInModal isOpen={signInOpen} onClose={onSignInClose} />
         <UploadModal isOpen={uploadOpen} onClose={onUploadClose} />
         {children}

@@ -12,18 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { RiUnsplashFill } from "react-icons/ri";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-// import NextImage from "next/image";
 
 import { imgDataModel } from "../util/types";
-
-// type Props = {
-//   imageId: string;
-//   imageSrc: string;
-//   authorName: string;
-//   authorLink: string;
-//   companyLink: string;
-//   onImgClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-// };
 
 interface Props extends imgDataModel {
   onImgClick: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -63,19 +53,13 @@ const Card = ({
         }}
         onClick={onImgClick}
         data-img-id={id}
-        // data-img-url={url}
-        // data-artist-url={artistUrl}
-        // data-time-stamp={timeStamp}
       >
         <Box
           as="figure"
           width="100%"
           height="100%"
           overflow="hidden"
-          // position="relative"
           transition="transform 0.2s ease-out"
-          // bg={`url(${url})`}
-          // bgSize="cover"
         >
           <Skeleton isLoaded={imgLoaded}>
             <Image
@@ -85,7 +69,6 @@ const Card = ({
               onLoad={handleImgLoaded}
             />
           </Skeleton>
-          {/* <NextImage src={url} layout="fill" objectFit="cover" /> */}
         </Box>
       </GridItem>
       <GridItem

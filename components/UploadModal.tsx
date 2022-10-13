@@ -128,9 +128,6 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
           });
       }
     );
-
-    // TO DO: COULD CREATE A PREVIEW AND GET NATURAL PIXELS FROM IT FOR NEXT
-    // TO DO: add a library to optimize image before upload, perhaps add a checkbox to select
   };
 
   const handleModalClose = () => {

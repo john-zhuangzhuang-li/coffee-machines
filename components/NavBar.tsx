@@ -21,15 +21,13 @@ import {
 import { FaCoffee } from "react-icons/fa";
 
 import { useUserContext } from "../util/UserContext";
-import { imgDataModel } from "../util/types";
 
 type Props = {
   onSignInOpen: () => void;
   onUploadOpen: () => void;
-  imgList?: imgDataModel[] | null;
 };
 
-const NavBar = ({ onSignInOpen, onUploadOpen, imgList }: Props) => {
+const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { user, userSignOut } = useUserContext();
 
@@ -52,8 +50,6 @@ const NavBar = ({ onSignInOpen, onUploadOpen, imgList }: Props) => {
       backdropFilter="auto"
       backdropBlur="10px"
       gridColumn={{ base: "1 / -1", md: "center" }}
-      justifyContent="center"
-      alignItems="center"
       px={{ base: 6, md: 0 }}
       py={3}
       columnGap={3}
@@ -80,10 +76,10 @@ const NavBar = ({ onSignInOpen, onUploadOpen, imgList }: Props) => {
       <Menu>
         <MenuButton
           as={Button}
-          aria-label="Admin menu"
+          aria-label="Config menu"
           rightIcon={<SettingsIcon />}
         >
-          Admin
+          Config
         </MenuButton>
         <MenuList>
           {user ? (
@@ -102,62 +98,14 @@ const NavBar = ({ onSignInOpen, onUploadOpen, imgList }: Props) => {
           >
             Upload
           </MenuItem>
-
-          {/* TEST ONLY */}
-          {/* <MenuItem
-            onClick={() => {
-              console.log(imgList);
-            }}
-          >
-            Print data
-          </MenuItem> */}
-
-          {/* TEST ONLY */}
-          {/* GOOD WORKS AS EXPECTED NOW CAN FINISH DATA LOADING */}
-          {/* <MenuItem
-            onClick={() => {
-              console.log("Testing date");
-              const timeStamp = Date.now();
-              console.log(timeStamp);
-              const newDate = new Date(timeStamp);
-              console.log(newDate);
-              const newDateText = newDate.toLocaleString("en-US");
-              console.log(`Local time is ${newDateText}`);
-              const oldTimeStamp = 0;
-              const oldDate = new Date(oldTimeStamp);
-              console.log(oldDate);
-              const oldDateText = oldDate.toLocaleString("en-US");
-              console.log(`Old time is ${oldDateText}`);
-              const dates = [oldTimeStamp, timeStamp];
-              console.log("Array should be old > new");
-              console.log(dates.map((stamp) => new Date(stamp)));
-              dates.sort((a, b) => b - a);
-              console.log("Array should be new > old");
-              console.log(dates.map((stamp) => new Date(stamp)));
-              dates.sort((a, b) => a - b);
-              console.log("Array should be old > new");
-              console.log(dates.map((stamp) => new Date(stamp)));
-            }}
-          >
-            Test Date
-          </MenuItem> */}
         </MenuList>
       </Menu>
-      {colorMode === "light" ? (
-        <IconButton
-          colorScheme="teal"
-          aria-label="Toggle color mode"
-          icon={<MoonIcon />}
-          onClick={toggleColorMode}
-        />
-      ) : (
-        <IconButton
-          colorScheme="teal"
-          aria-label="Toggle color mode"
-          icon={<SunIcon />}
-          onClick={toggleColorMode}
-        />
-      )}
+      <IconButton
+        colorScheme="teal"
+        aria-label="Toggle color mode"
+        icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        onClick={toggleColorMode}
+      />
     </Flex>
   );
 };
