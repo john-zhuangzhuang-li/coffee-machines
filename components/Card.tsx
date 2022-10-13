@@ -17,6 +17,7 @@ import { imgDataModel } from "../util/types";
 
 interface Props extends imgDataModel {
   onImgClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  isLoadingStatic: boolean;
 }
 
 const Card = ({
@@ -27,8 +28,9 @@ const Card = ({
   company,
   companyUrl,
   onImgClick,
+  isLoadingStatic,
 }: Props) => {
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(isLoadingStatic);
   const handleImgLoaded = () => {
     setImgLoaded(true);
   };
@@ -60,6 +62,9 @@ const Card = ({
           height="100%"
           overflow="hidden"
           transition="transform 0.2s ease-out"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
         >
           <Skeleton isLoaded={imgLoaded}>
             <Image

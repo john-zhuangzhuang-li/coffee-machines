@@ -5,7 +5,7 @@ export const resizeImage = (file: File): Promise<File> =>
     Resizer.imageFileResizer(
       file,
       1000,
-      1000,
+      2500,
       "webp",
       90,
       0,

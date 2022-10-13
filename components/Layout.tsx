@@ -7,7 +7,6 @@ import { imgDataModel } from "../util/types";
 
 type Props = {
   children?: React.ReactNode;
-  imgList?: imgDataModel[] | null;
 };
 
 const Container = chakra("div", {
@@ -22,7 +21,7 @@ const Container = chakra("div", {
   },
 });
 
-const Layout = ({ children, imgList }: Props) => {
+const Layout = ({ children }: Props) => {
   const {
     isOpen: signInOpen,
     onOpen: onSignInOpen,

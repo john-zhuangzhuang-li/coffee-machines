@@ -9,9 +9,10 @@ import { imgDataModel } from "../util/types";
 type Props = {
   imgList?: imgDataModel[] | null;
   currentLoad: number;
+  isLoadingStatic: boolean;
 };
 
-const Main = ({ imgList, currentLoad }: Props) => {
+const Main = ({ imgList, currentLoad, isLoadingStatic }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalImgId, setModalImgId] = useState("");
 
@@ -42,7 +43,12 @@ const Main = ({ imgList, currentLoad }: Props) => {
           imgList
             .filter((item, index) => index <= currentLoad - 1)
             .map((item) => (
-              <Card key={item.id} onImgClick={handleCardImgClick} {...item} />
+              <Card
+                key={item.id}
+                onImgClick={handleCardImgClick}
+                isLoadingStatic={isLoadingStatic}
+                {...item}
+              />
             ))}
       </Grid>
       {imgList && (

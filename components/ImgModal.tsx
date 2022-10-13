@@ -14,7 +14,7 @@ import {
   Text,
   Link,
   Spinner,
-  Center,
+  Flex,
 } from "@chakra-ui/react";
 
 import { ExternalLinkIcon, WarningTwoIcon } from "@chakra-ui/icons";
@@ -28,6 +28,19 @@ type Props = {
 };
 
 const ImgModal = ({ isOpen, onClose, imgId, imgList }: Props) => {
+  const loadingModal = (
+    <Flex
+      py={{ base: 12, md: 24 }}
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      rowGap={9}
+    >
+      <Text>Loading ☕</Text>
+      <Spinner size="lg" />
+    </Flex>
+  );
+
   const errorModal = (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -74,15 +87,7 @@ const ImgModal = ({ isOpen, onClose, imgId, imgList }: Props) => {
       <ModalOverlay />
       <ModalContent overflow="hidden">
         <ModalBody p={0}>
-          <Image
-            objectFit="contain"
-            src={url}
-            fallback={
-              <Center py={{ base: 8, md: 24 }}>
-                <Spinner size="lg" />
-              </Center>
-            }
-          />
+          <Image objectFit="contain" src={url} fallback={<>{loadingModal}</>} />
           <Box p={3}>
             <Text fontSize="md">{`Uploaded on ${uploadDate.toLocaleDateString(
               "en-US"
