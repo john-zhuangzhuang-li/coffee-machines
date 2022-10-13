@@ -1,7 +1,13 @@
 import { Flex, Button } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 
-const LoadMore = () => {
+type Props = {
+  step: number;
+  maxStep: number;
+  onLoadMore: () => void;
+};
+
+const LoadMore = ({ step, maxStep, onLoadMore }: Props) => {
   return (
     <Flex
       as="section"
@@ -15,7 +21,8 @@ const LoadMore = () => {
         size="md"
         textTransform="uppercase"
         rightIcon={<RepeatIcon />}
-        // isLoading
+        onClick={onLoadMore}
+        isDisabled={step >= maxStep}
       >
         load more
       </Button>

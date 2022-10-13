@@ -1,4 +1,15 @@
-import { Grid, GridItem, Icon, Box, Text, Link, Image } from "@chakra-ui/react";
+import { useState } from "react";
+
+import {
+  Grid,
+  GridItem,
+  Icon,
+  Box,
+  Text,
+  Link,
+  Image,
+  Skeleton,
+} from "@chakra-ui/react";
 import { RiUnsplashFill } from "react-icons/ri";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 // import NextImage from "next/image";
@@ -21,14 +32,17 @@ interface Props extends imgDataModel {
 const Card = ({
   id,
   url,
-  path,
   artist,
   artistUrl,
   company,
   companyUrl,
-  timeStamp,
   onImgClick,
 }: Props) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const handleImgLoaded = () => {
+    setImgLoaded(true);
+  };
+
   return (
     <Grid
       templateRows="1fr min-content"
@@ -60,10 +74,17 @@ const Card = ({
           overflow="hidden"
           // position="relative"
           transition="transform 0.2s ease-out"
-          bg={`url(${url})`}
-          bgSize="cover"
+          // bg={`url(${url})`}
+          // bgSize="cover"
         >
-          {/* <Image src={url} objectFit="cover" /> */}
+          <Skeleton isLoaded={imgLoaded}>
+            <Image
+              src={url}
+              minH="18rem"
+              objectFit="cover"
+              onLoad={handleImgLoaded}
+            />
+          </Skeleton>
           {/* <NextImage src={url} layout="fill" objectFit="cover" /> */}
         </Box>
       </GridItem>

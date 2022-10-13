@@ -1,4 +1,21 @@
+// import { useBreakpointValue } from "@chakra-ui/react";
 import Resizer from "react-image-file-resizer";
+
+export const IMAGES_PER_LOAD = 3;
+// USE BELOW IF MAKING IMG PER LOAD CHANGE WITH SCR SIZE
+// export const useLoadSize = () => {
+//   const loadSize = useBreakpointValue(
+//     {
+//       base: 1,
+//       md: 2,
+//       lg: 3,
+//     },
+//     {
+//       fallback: "lg",
+//     }
+//   );
+//   return loadSize;
+// };
 
 export const resizeImage = (file: File): Promise<File> =>
   new Promise((resolve) => {
