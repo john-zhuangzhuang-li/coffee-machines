@@ -21,6 +21,7 @@ export const resizeImage = (file: File): Promise<File> =>
 
 export const handleUnsplashCreditSplit = (credit: string) => {
   const splitCredit = credit.split(` on `);
+  if (splitCredit.length !== 2) return;
   const parsedCredit = splitCredit.map((credit) => {
     const indexFirstQuote = credit.indexOf(`"`);
     const indexLastQuote = credit.lastIndexOf(`"`);
@@ -36,6 +37,16 @@ export const handleUnsplashCreditSplit = (credit: string) => {
   const { text: artist, url: artistUrl } = parsedCredit[0];
   const { text: company, url: companyUrl } =
     parsedCredit[parsedCredit.length - 1];
+  if (
+    !artist ||
+    !artistUrl ||
+    !artistUrl.startsWith("https://unsplash.com/") ||
+    !company ||
+    company !== "Unsplash" ||
+    !companyUrl ||
+    !companyUrl.startsWith("https://unsplash.com/")
+  )
+    return;
   return {
     artist,
     artistUrl,

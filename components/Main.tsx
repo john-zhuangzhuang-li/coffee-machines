@@ -4,6 +4,8 @@ import { Grid, useDisclosure } from "@chakra-ui/react";
 import Card from "./Card";
 import ImgModal from "./ImgModal";
 
+import { useUserContext } from "../util/UserContext";
+
 import { imgDataModel } from "../util/types";
 
 type Props = {
@@ -15,6 +17,7 @@ type Props = {
 const Main = ({ imgList, currentLoad, isLoadingStatic }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalImgId, setModalImgId] = useState("");
+  const { user } = useUserContext();
 
   const handleCardImgClick = (
     event: React.MouseEvent<HTMLDivElement>
@@ -41,6 +44,9 @@ const Main = ({ imgList, currentLoad, isLoadingStatic }: Props) => {
       >
         {imgList &&
           imgList
+            .filter((item) =>
+              user ? item : item.userEmail !== "cup@bottomless.com"
+            )
             .filter((item, index) => index <= currentLoad - 1)
             .map((item) => (
               <Card

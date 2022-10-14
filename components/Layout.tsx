@@ -3,7 +3,6 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import SignInModal from "./SignInModal";
 import UploadModal from "./UploadModal";
-import { imgDataModel } from "../util/types";
 
 type Props = {
   children?: React.ReactNode;

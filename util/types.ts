@@ -7,4 +7,5 @@ export interface imgDataModel {
   company: string;
   companyUrl: string;
   timeStamp: number;
+  userEmail?: string;
 }

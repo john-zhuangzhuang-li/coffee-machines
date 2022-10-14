@@ -12,7 +12,8 @@ const formatRegex = {
 
 const processCheck = {
   unsplash: (input: string) =>
-    input.startsWith(`Photo by <a href="https://unsplash.com/`),
+    input.startsWith(`Photo by <a href="https://unsplash.com/`) &&
+    input.trimEnd().endsWith(`>Unsplash</a>`),
 };
 
 const useInputValidation = (config: validationConfig) => {

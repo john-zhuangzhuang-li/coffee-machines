@@ -98,6 +98,14 @@ const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
           >
             Upload
           </MenuItem>
+          {/* FOR TEST ONLY */}
+          {/* <MenuItem
+            icon={user ? <UnlockIcon /> : <LockIcon />}
+            isDisabled={!user}
+            onClick={() => console.log(user!.email)}
+          >
+            TEST
+          </MenuItem> */}
         </MenuList>
       </Menu>
       <IconButton

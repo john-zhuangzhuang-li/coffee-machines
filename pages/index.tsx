@@ -63,7 +63,9 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   const data = snapshot.val();
   const imgData: imgDataModel[] = Object.values(data);
-  imgData.sort((a, b) => b.timeStamp - a.timeStamp);
+  imgData
+    .sort((a, b) => b.timeStamp - a.timeStamp)
+    .filter((img) => img.userEmail !== "cup@bottomless.com");
 
   return {
     props: { initialList: imgData },

@@ -31,6 +31,8 @@ import {
 
 import { DeleteIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
+import { useUserContext } from "../util/UserContext";
+
 import useInputValidation from "../util/useInputValidation";
 import { resizeImage, handleUnsplashCreditSplit } from "../util/util";
 
@@ -48,6 +50,8 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const initialRef = useRef<HTMLButtonElement>(null);
 
+  const { user } = useUserContext();
+
   const {
     inputValue: creditValue,
     isValid: creditIsValid,
@@ -58,10 +62,31 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
 
   const handleSubmit = async (event: FormEvent<HTMLDivElement>) => {
     event.preventDefault();
+
+    if (!user) {
+      console.log("USER EXPIRED");
+      setUploadError("Please sign-in before uploading");
+      setLoading(false);
+      return;
+    }
+    const { email: userEmail } = user;
+
+    const creditInfo = handleUnsplashCreditSplit(creditValue);
+    if (!creditInfo) {
+      console.log("PARSING ERROR");
+      setUploadError("An error occurred while parsing credit input");
+      setLoading(false);
+      return;
+    }
+
     const files = fileRef.current?.files;
-    if (!files) return;
+    if (!files || files.length === 0) {
+      console.log("MISSING FILE");
+      setUploadError("Could not find the file to upload");
+      setLoading(false);
+      return;
+    }
     const file = files[0];
-    if (!file) return;
 
     setLoading(true);
 
@@ -107,13 +132,13 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
         console.log("UPLOAD COMPLETED");
         getDownloadURL(uploadTask.snapshot.ref)
           .then((downloadURL) => {
-            const creditInfo = handleUnsplashCreditSplit(creditValue);
             const uploadData = {
               ...creditInfo,
               id: `${imgName}-${keyStamp}`,
               url: downloadURL,
               path,
               timeStamp,
+              userEmail,
             };
             console.log(uploadData);
             return set(refDB(database, `test-2/${uploadData.id}`), uploadData);
@@ -163,11 +188,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
             <Highlight
               query={["copy", "paste"]}
               styles={{
-                bg: "accent",
-                color: "accentText",
-                rounded: "full",
-                px: 2,
-                pb: 1,
+                color: "accent",
               }}
             >
               {` only. When downloading an image, copy the credit code provided and paste it directly into the credit input below.`}
