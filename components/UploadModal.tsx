@@ -22,9 +22,14 @@ import {
   InputRightElement,
   IconButton,
   Progress,
+  Checkbox,
+  Text,
+  Collapse,
+  Highlight,
+  Link,
 } from "@chakra-ui/react";
 
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 import useInputValidation from "../util/useInputValidation";
 import { resizeImage, handleUnsplashCreditSplit } from "../util/util";
@@ -38,9 +43,10 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const creditRef = useRef<HTMLInputElement>(null);
+  const initialRef = useRef<HTMLButtonElement>(null);
 
   const {
     inputValue: creditValue,
@@ -139,7 +145,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
     <Modal
       isOpen={isOpen}
       onClose={handleModalClose}
-      initialFocusRef={creditRef}
+      initialFocusRef={initialRef}
       closeOnOverlayClick={!loading}
       closeOnEsc={!loading}
     >
@@ -148,64 +154,96 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
         <ModalHeader>Image upload</ModalHeader>
         <ModalCloseButton isDisabled={loading} />
         <ModalBody as="form" id="upload-form" onSubmit={handleSubmit}>
-          <FormControl as="fieldset">
-            <FormLabel>Image</FormLabel>
-            <Input
-              type="file"
-              ref={fileRef}
-              accept="image/*"
-              isDisabled={loading || !!uploadError}
-            />
-          </FormControl>
-          <FormControl mt={3} as="fieldset" isInvalid={!!creditHelperText}>
-            <FormLabel>Credit</FormLabel>
-            <InputGroup>
+          <Text>
+            {`The upload function accepts images downloaded from `}
+            <Link color="accent" href="" isExternal>
+              {`Unsplash`}
+              <ExternalLinkIcon mx="2px" />
+            </Link>
+            <Highlight
+              query={["copy", "paste"]}
+              styles={{
+                bg: "accent",
+                color: "accentText",
+                rounded: "full",
+                px: 2,
+                pb: 1,
+              }}
+            >
+              {` only. When downloading an image, copy the credit code provided and paste it directly into the credit input below.`}
+            </Highlight>
+          </Text>
+          <Text mt={3}>
+            Images uploaded by test users will be visible to logged-in users
+            only and removed periodically.
+          </Text>
+          <Checkbox
+            mt={3}
+            isChecked={isAgreed}
+            onChange={(e) => setIsAgreed(e.target.checked)}
+            isDisabled={loading || !!uploadError}
+          >
+            I agree to upload responsibly
+          </Checkbox>
+          <Collapse in={isAgreed} animateOpacity>
+            <FormControl mt={3} as="fieldset">
+              <FormLabel>Image</FormLabel>
               <Input
-                placeholder="Credit"
-                value={creditValue}
-                onChange={handleCreditChange}
-                ref={creditRef}
-                isDisabled={loading || !!uploadError}
+                type="file"
+                ref={fileRef}
+                accept="image/*"
+                isDisabled={loading || !!uploadError || !isAgreed}
               />
-              <InputRightElement>
-                <IconButton
-                  aria-label="Empty input"
-                  icon={<DeleteIcon />}
-                  size="sm"
-                  onClick={handleClearCredit}
-                  isDisabled={loading || !!uploadError}
+            </FormControl>
+            <FormControl mt={3} as="fieldset" isInvalid={!!creditHelperText}>
+              <FormLabel>Credit</FormLabel>
+              <InputGroup>
+                <Input
+                  placeholder="Credit"
+                  value={creditValue}
+                  onChange={handleCreditChange}
+                  isDisabled={loading || !!uploadError || !isAgreed}
                 />
-              </InputRightElement>
-            </InputGroup>
-            {!creditHelperText && !uploadError ? (
-              <FormHelperText>
-                {!loading && "Paste directly from clipboard"}
-                {loading &&
-                  uploadProgress < 1 &&
-                  "Optimizing image before upload..."}
-                {loading &&
-                  uploadProgress >= 1 &&
-                  uploadProgress < 99 &&
-                  "Uploading image to cloud storage..."}
-                {loading &&
-                  uploadProgress >= 99 &&
-                  "Updating information to database..."}
-              </FormHelperText>
-            ) : (
-              <FormErrorMessage>{creditHelperText}</FormErrorMessage>
+                <InputRightElement>
+                  <IconButton
+                    aria-label="Empty input"
+                    icon={<DeleteIcon />}
+                    size="sm"
+                    onClick={handleClearCredit}
+                    isDisabled={loading || !!uploadError || !isAgreed}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              {!creditHelperText && !uploadError ? (
+                <FormHelperText>
+                  {!loading && "Paste directly from clipboard"}
+                  {loading &&
+                    uploadProgress < 1 &&
+                    "Optimizing image before upload..."}
+                  {loading &&
+                    uploadProgress >= 1 &&
+                    uploadProgress < 99 &&
+                    "Uploading image to cloud storage..."}
+                  {loading &&
+                    uploadProgress >= 99 &&
+                    "Updating information to database..."}
+                </FormHelperText>
+              ) : (
+                <FormErrorMessage>{creditHelperText}</FormErrorMessage>
+              )}
+              {!!uploadError && (
+                <FormHelperText color="textError">{uploadError}</FormHelperText>
+              )}
+            </FormControl>
+            {loading && (
+              <Progress
+                colorScheme={"teal"}
+                hasStripe
+                value={uploadProgress}
+                mt={3}
+              />
             )}
-            {!!uploadError && (
-              <FormHelperText color="textError">{uploadError}</FormHelperText>
-            )}
-          </FormControl>
-          {loading && (
-            <Progress
-              colorScheme={"teal"}
-              hasStripe
-              value={uploadProgress}
-              mt={3}
-            />
-          )}
+          </Collapse>
         </ModalBody>
         <ModalFooter>
           <Button
@@ -213,7 +251,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
             type="submit"
             form="upload-form"
             mr={3}
-            disabled={loading || !creditIsValid || !!uploadError}
+            disabled={loading || !creditIsValid || !!uploadError || !isAgreed}
           >
             Upload
           </Button>
@@ -221,6 +259,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
             variant="ghost"
             onClick={handleModalClose}
             isDisabled={loading}
+            ref={initialRef}
           >
             Close
           </Button>

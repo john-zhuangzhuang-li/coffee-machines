@@ -17,6 +17,11 @@ import {
   InputRightElement,
   IconButton,
   Text,
+  Collapse,
+  useDisclosure,
+  Link,
+  Code,
+  Stack,
 } from "@chakra-ui/react";
 
 import {
@@ -24,6 +29,7 @@ import {
   ViewOffIcon,
   WarningTwoIcon,
   CheckCircleIcon,
+  ChevronDownIcon,
 } from "@chakra-ui/icons";
 import { useUserContext } from "../util/UserContext";
 import useInputValidation from "../util/useInputValidation";
@@ -34,6 +40,8 @@ type Props = {
 };
 
 const SignInModal = ({ isOpen, onClose }: Props) => {
+  const { isOpen: collapseOpen, onToggle: onCollapseToggle } = useDisclosure();
+
   const initialRef = useRef<HTMLInputElement>(null);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -122,10 +130,33 @@ const SignInModal = ({ isOpen, onClose }: Props) => {
         )}
         {!authError && !user && (
           <ModalBody as="form" id="sign-in-form" onSubmit={handleSubmit}>
-            <FormControl as="fieldset" isInvalid={!!emailHelperText}>
+            <Text>
+              {`Hi 👋 this site is a practice project and currently not accepting
+              user sign-ups. To test the upload function, please sign in as the `}
+              <Link color="accent" onClick={onCollapseToggle}>
+                {`Test User`}
+                <ChevronDownIcon
+                  mx="2px"
+                  transition="transform 0.2s ease-in-out"
+                  transform={collapseOpen ? "rotate(180deg)" : "rotate(0)"}
+                />
+              </Link>
+            </Text>
+            <Collapse in={collapseOpen} animateOpacity>
+              <Stack direction="column" mt={3}>
+                <Text>
+                  {`Email: `} <Code>cup@bottomless.com</Code>
+                </Text>
+                <Text>
+                  {`Password: `}
+                  <Code>testuser</Code>
+                </Text>
+              </Stack>
+            </Collapse>
+            <FormControl mt={3} as="fieldset" isInvalid={!!emailHelperText}>
               <FormLabel>Email</FormLabel>
               <Input
-                placeholder="email@example.com"
+                placeholder="cup@bottomless.com"
                 value={emailValue}
                 onChange={handleEmailChange}
                 ref={initialRef}

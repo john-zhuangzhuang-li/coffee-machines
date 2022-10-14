@@ -37,7 +37,7 @@ const ImgModal = ({ isOpen, onClose, imgId, imgList }: Props) => {
       rowGap={9}
     >
       <Text>Loading ☕</Text>
-      <Spinner size="lg" />
+      <Spinner size="lg" color="accent" />
     </Flex>
   );
 

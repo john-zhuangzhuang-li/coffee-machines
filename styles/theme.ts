@@ -1,7 +1,7 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-  initialColorMode: "light",
+  initialColorMode: "dark",
   useSystemColorMode: false,
 };
 
@@ -12,6 +12,10 @@ const theme = extendTheme({
       accent: {
         default: "teal.500",
         _dark: "teal.200",
+      },
+      accentText: {
+        default: "#fff",
+        _dark: "#000",
       },
       bgNavBar: {
         default: "whiteAlpha.800",
