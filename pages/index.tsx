@@ -1,6 +1,6 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useState, useEffect } from "react";
-import { ref as refDB, onValue, get } from "firebase/database";
+import { ref as refDB, onValue, get, off } from "firebase/database";
 import { database } from "../util/firebase";
 
 import Layout from "../components/Layout";
@@ -18,17 +18,48 @@ const Home: NextPage = ({
   const [imgList, setImgList] = useState<imgDataModel[] | null>(null);
   const { currentLoad, handleLoadMore } = useLoadSize();
 
-  useEffect(() => {
-    const imageListRef = refDB(database, IMG_LIST_PATH);
-    const unsubscribe = onValue(imageListRef, (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
-      const imgData: imgDataModel[] = Object.values(data);
-      imgData.sort((a, b) => b.timeStamp - a.timeStamp);
-      setImgList(imgData);
+  // FIND A WAY TO DEAL WITH THIS ERR
+  // LIKELY BY WEBPACK + FIREBASE
 
-      return () => unsubscribe();
-    });
+  useEffect(() => {
+    setImgList(null);
+    //   const imageListRef = refDB(database, IMG_LIST_PATH);
+
+    // Read once method
+
+    // get(imageListRef)
+    //   .then((snapshot) => {
+    //     if (!snapshot.exists()) setImgList(null);
+    //     const data = snapshot.val();
+    //     const imgData: imgDataModel[] = Object.values(data);
+    //     imgData.sort((a, b) => b.timeStamp - a.timeStamp);
+    //     setImgList(imgData);
+    //   })
+    //   .catch((error) => console.log(error));
+
+    // OFF METHOD
+
+    // onValue(imageListRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   if (!data) return;
+    //   const imgData: imgDataModel[] = Object.values(data);
+    //   imgData.sort((a, b) => b.timeStamp - a.timeStamp);
+    //   setImgList(imgData);
+    // });
+
+    // return () => off(imageListRef);
+
+    // UNSUB METHOD
+
+    // const unsubscribe = onValue(imageListRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   if (!data) return;
+    //   const imgData: imgDataModel[] = Object.values(data);
+    //   imgData.sort((a, b) => b.timeStamp - a.timeStamp);
+    //   setImgList(imgData);
+    // });
+
+    // return () => unsubscribe();
   }, []);
 
   return (
@@ -38,11 +69,13 @@ const Home: NextPage = ({
         <Main
           imgList={imgList || initialList}
           currentLoad={currentLoad}
-          isLoadingStatic={!imgList}
+          isLoadingStatic={true}
+          // isLoadingStatic={!imgList}
         />
         <LoadMore
           currentLoad={currentLoad}
-          listSize={imgList ? imgList.length : 0}
+          listSize={imgList ? imgList.length : initialList.length}
+          // listSize={imgList ? imgList.length : 0}
           onLoadMore={handleLoadMore}
         />
       </Layout>
