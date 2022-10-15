@@ -1,5 +1,8 @@
 import Resizer from "react-image-file-resizer";
 
+export const IMG_LIST_PATH = "coffee/";
+export const TEST_USER_EMAIL = "cup@bottomless.com";
+
 export const resizeImage = (file: File): Promise<File> =>
   new Promise((resolve) => {
     Resizer.imageFileResizer(
@@ -10,7 +13,6 @@ export const resizeImage = (file: File): Promise<File> =>
       90,
       0,
       (file) => {
-        // NARROWING DOWN URI TO FILE OPTION
         console.log("COMPRESSING FILE");
         // console.log(uri);
         if (file instanceof File) resolve(file);

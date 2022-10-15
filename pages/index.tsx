@@ -10,6 +10,7 @@ import LoadMore from "../components/LoadMore";
 import { UserProvider } from "../util/UserContext";
 import { imgDataModel } from "../util/types";
 import useLoadSize from "../util/useLoadSize";
+import { TEST_USER_EMAIL, IMG_LIST_PATH } from "../util/util";
 
 const Home: NextPage = ({
   initialList,
@@ -18,15 +19,12 @@ const Home: NextPage = ({
   const { currentLoad, handleLoadMore } = useLoadSize();
 
   useEffect(() => {
-    const imageListRef = refDB(database, "test-2/");
+    const imageListRef = refDB(database, IMG_LIST_PATH);
     const unsubscribe = onValue(imageListRef, (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
-      // console.log(data);
       const imgData: imgDataModel[] = Object.values(data);
-      // console.log(imgData);
       imgData.sort((a, b) => b.timeStamp - a.timeStamp);
-      // console.log(imgData);
       setImgList(imgData);
 
       return () => unsubscribe();
@@ -55,7 +53,7 @@ const Home: NextPage = ({
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const initialListRef = refDB(database, "test-2/");
+  const initialListRef = refDB(database, IMG_LIST_PATH);
   const snapshot = await get(initialListRef);
   if (!snapshot.exists())
     return {
@@ -65,7 +63,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const imgData: imgDataModel[] = Object.values(data);
   imgData
     .sort((a, b) => b.timeStamp - a.timeStamp)
-    .filter((img) => img.userEmail !== "cup@bottomless.com");
+    .filter((img) => img.userEmail !== TEST_USER_EMAIL);
 
   return {
     props: { initialList: imgData },

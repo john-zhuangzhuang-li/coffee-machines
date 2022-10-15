@@ -34,7 +34,11 @@ import { DeleteIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useUserContext } from "../util/UserContext";
 
 import useInputValidation from "../util/useInputValidation";
-import { resizeImage, handleUnsplashCreditSplit } from "../util/util";
+import {
+  resizeImage,
+  handleUnsplashCreditSplit,
+  IMG_LIST_PATH,
+} from "../util/util";
 
 type Props = {
   isOpen: boolean;
@@ -97,7 +101,6 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
 
     const optimizedFile = await resizeImage(file);
     console.log("COMPRESS COMPLETED");
-    // console.log(optimizedFile);
 
     if (!optimizedFile || !(optimizedFile instanceof File)) {
       console.log("COMPRESS ERROR");
@@ -106,7 +109,7 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    const path = `test-2/${optimizedFile.name}`;
+    const path = `${IMG_LIST_PATH}${optimizedFile.name}`;
     const storageRef = ref(storage, path);
     const uploadTask = uploadBytesResumable(storageRef, optimizedFile);
 
@@ -141,7 +144,10 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
               userEmail,
             };
             console.log(uploadData);
-            return set(refDB(database, `test-2/${uploadData.id}`), uploadData);
+            return set(
+              refDB(database, `${IMG_LIST_PATH}${uploadData.id}`),
+              uploadData
+            );
           })
           .then(() => {
             console.log("DATABASE UPDATE COMPLETED");

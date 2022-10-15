@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Flex,
   Spacer,
@@ -30,14 +32,18 @@ type Props = {
 const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { user, userSignOut } = useUserContext();
+  const [loading, setLoading] = useState(false);
 
   const handleSignOut = async () => {
-    if (!userSignOut) return;
+    if (!user || !userSignOut) return;
+    setLoading(true);
     try {
       await userSignOut();
       console.log("SIGN OUT SUCCESSFUL");
+      setLoading(false);
     } catch (error: any) {
       console.log(error.message);
+      setLoading(false);
     }
   };
 
@@ -78,6 +84,7 @@ const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
           as={Button}
           aria-label="Config menu"
           rightIcon={<SettingsIcon />}
+          isLoading={loading}
         >
           Config
         </MenuButton>
@@ -98,14 +105,6 @@ const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
           >
             Upload
           </MenuItem>
-          {/* FOR TEST ONLY */}
-          {/* <MenuItem
-            icon={user ? <UnlockIcon /> : <LockIcon />}
-            isDisabled={!user}
-            onClick={() => console.log(user!.email)}
-          >
-            TEST
-          </MenuItem> */}
         </MenuList>
       </Menu>
       <IconButton

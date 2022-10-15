@@ -5,7 +5,7 @@ import Card from "./Card";
 import ImgModal from "./ImgModal";
 
 import { useUserContext } from "../util/UserContext";
-
+import { TEST_USER_EMAIL } from "../util/util";
 import { imgDataModel } from "../util/types";
 
 type Props = {
@@ -45,7 +45,7 @@ const Main = ({ imgList, currentLoad, isLoadingStatic }: Props) => {
         {imgList &&
           imgList
             .filter((item) =>
-              user ? item : item.userEmail !== "cup@bottomless.com"
+              user ? item : item.userEmail !== TEST_USER_EMAIL
             )
             .filter((item, index) => index <= currentLoad - 1)
             .map((item) => (
