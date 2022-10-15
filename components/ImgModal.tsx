@@ -28,6 +28,8 @@ type Props = {
 };
 
 const ImgModal = ({ isOpen, onClose, imgId, imgList }: Props) => {
+  const initialRef = useRef<HTMLButtonElement>(null);
+
   const loadingModal = (
     <Flex
       py={{ base: 12, md: 24 }}
@@ -72,7 +74,6 @@ const ImgModal = ({ isOpen, onClose, imgId, imgList }: Props) => {
   if (!currentImg) return <>{errorModal}</>;
 
   const { url, companyUrl, timeStamp } = currentImg;
-  const initialRef = useRef<HTMLButtonElement>(null);
   const uploadDate = new Date(timeStamp);
 
   return (
@@ -87,7 +88,12 @@ const ImgModal = ({ isOpen, onClose, imgId, imgList }: Props) => {
       <ModalOverlay />
       <ModalContent overflow="hidden">
         <ModalBody p={0}>
-          <Image objectFit="contain" src={url} fallback={<>{loadingModal}</>} />
+          <Image
+            objectFit="contain"
+            src={url}
+            alt="Image large"
+            fallback={<>{loadingModal}</>}
+          />
           <Box p={3}>
             <Text fontSize="md">{`Uploaded on ${uploadDate.toLocaleDateString(
               "en-US"

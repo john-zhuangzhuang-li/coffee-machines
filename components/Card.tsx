@@ -72,6 +72,7 @@ const Card = ({
               minH="18rem"
               objectFit="cover"
               onLoad={handleImgLoaded}
+              alt="Image small"
             />
           </Skeleton>
         </Box>
