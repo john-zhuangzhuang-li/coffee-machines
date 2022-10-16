@@ -80,13 +80,25 @@ const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
         aria-label="Logo"
         icon={<Icon as={FaCoffee} w={5} h={5} color="accent" />}
         display={{ base: "flex", sm: "none" }}
-        onClick={() => window.scrollTo(0, 0)}
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+          })
+        }
       />
       <Button
         leftIcon={<Icon as={FaCoffee} w={5} h={5} color="accent" />}
         variant="ghost"
         display={{ base: "none", sm: "flex" }}
-        onClick={() => window.scrollTo(0, 0)}
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+          })
+        }
       >
         <Heading as="h2" size="md" noOfLines={1}>
           Bottomless
