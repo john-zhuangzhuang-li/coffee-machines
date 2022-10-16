@@ -1,4 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import {
+  ref as refDB,
+  onValue,
+  get,
+  off,
+  getDatabase,
+} from "firebase/database";
 
 import {
   Flex,
@@ -20,7 +28,7 @@ import {
   SunIcon,
   MoonIcon,
 } from "@chakra-ui/icons";
-import { FaCoffee } from "react-icons/fa";
+import { FaCoffee, FaShapes } from "react-icons/fa";
 
 import { useUserContext } from "../util/UserContext";
 
@@ -33,6 +41,12 @@ const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { user, userSignOut } = useUserContext();
   const [loading, setLoading] = useState(false);
+
+  // useEffect(()=>{
+  //   const databaseTest = getDatabase();
+  //   const testRef = refDB(databaseTest, "coffee/");
+  //   get(testRef).then((snapshot) => console.log(snapshot));
+  // }, [])
 
   const handleSignOut = async () => {
     if (!user || !userSignOut) return;
@@ -105,6 +119,34 @@ const NavBar = ({ onSignInOpen, onUploadOpen }: Props) => {
           >
             Upload
           </MenuItem>
+
+          {/* TEST FOR WHEN FIREBASE FUNC FAILS IN BUILD VER*/}
+          {/* <MenuItem
+            onClick={() => {
+              const testFetch = async () => {
+                const res = await fetch(
+                  "https://cup-bottomless-default-rtdb.firebaseio.com/coffee.json"
+                );
+                const resData = await res.json();
+                console.log(resData);
+              };
+
+              testFetch();
+            }}
+          >
+            TEST
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              const databaseTest = getDatabase();
+              const testRef = refDB(databaseTest, "coffee/");
+              get(testRef)
+                .then((snapshot) => console.log(snapshot.val()))
+                .catch((error) => console.error(error));
+            }}
+          >
+            TEST 2
+          </MenuItem> */}
         </MenuList>
       </Menu>
       <IconButton

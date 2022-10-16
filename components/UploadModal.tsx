@@ -1,8 +1,9 @@
 import { useState, useRef, FormEvent } from "react";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { ref as refDB, set } from "firebase/database";
-import { storage, database } from "../util/firebase";
+// import { ref as refDB, set } from "firebase/database";
+// import { storage, database } from "../util/firebase";
+import { storage } from "../util/firebase";
 
 import {
   Modal,
@@ -38,6 +39,7 @@ import {
   resizeImage,
   handleUnsplashCreditSplit,
   IMG_LIST_PATH,
+  FETCH_URL_SAFE,
 } from "../util/util";
 
 type Props = {
@@ -144,10 +146,20 @@ const UploadModal = ({ isOpen, onClose }: Props) => {
               userEmail,
             };
             console.log(uploadData);
-            return set(
-              refDB(database, `${IMG_LIST_PATH}${uploadData.id}`),
-              uploadData
-            );
+
+            // TEMPORARILY USING REST API TO AVOID UNKNOWN FIREBASE DB SDK ERROR
+            // SWITCH BACK TO SDK WHEN FIGURED OUT ERROR FOR BETTER ERROR HANDLEING
+            return fetch(`${FETCH_URL_SAFE}/${uploadData.id}.json`, {
+              method: "PUT",
+              body: JSON.stringify(uploadData),
+              headers: {
+                "content-type": "application/json",
+              },
+            });
+            // return set(
+            //   refDB(database, `${IMG_LIST_PATH}${uploadData.id}`),
+            //   uploadData
+            // );
           })
           .then(() => {
             console.log("DATABASE UPDATE COMPLETED");

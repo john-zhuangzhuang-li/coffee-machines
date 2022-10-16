@@ -2,6 +2,8 @@ import Resizer from "react-image-file-resizer";
 
 export const IMG_LIST_PATH = "coffee/";
 export const TEST_USER_EMAIL = "cup@bottomless.com";
+export const FETCH_URL_SAFE =
+  "https://cup-bottomless-default-rtdb.firebaseio.com/coffee";
 
 export const resizeImage = (file: File): Promise<File> =>
   new Promise((resolve) => {
