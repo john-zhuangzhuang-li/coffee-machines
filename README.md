@@ -1,6 +1,7 @@
 # Cup bottomless
 
-This project aims at building an album site with a load-more button and upload feature for Next JS, Typescript, Firebase, and Chakra UI practices.
+This project aims at building an album site with a load-more button and upload feature for Next JS, Typescript, Firebase, and Chakra UI practices.  
+View the demo [here](https://coffee-machines.vercel.app/) on a computer or mobile device!
 
 ## Description
 
