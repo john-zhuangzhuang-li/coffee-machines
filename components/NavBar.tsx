@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
-import {
-  ref as refDB,
-  onValue,
-  get,
-  off,
-  getDatabase,
-} from "firebase/database";
+// import {
+//   ref as refDB,
+//   onValue,
+//   get,
+//   off,
+//   getDatabase,
+// } from "firebase/database";
 
 import {
   Flex,
@@ -28,7 +28,7 @@ import {
   SunIcon,
   MoonIcon,
 } from "@chakra-ui/icons";
-import { FaCoffee, FaShapes } from "react-icons/fa";
+import { FaCoffee } from "react-icons/fa";
 
 import { useUserContext } from "../util/UserContext";
 

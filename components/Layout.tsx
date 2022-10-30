@@ -34,15 +34,13 @@ const Layout = ({ children }: Props) => {
   } = useDisclosure();
 
   return (
-    <>
-      <Container>
-        <NavBar onSignInOpen={onSignInOpen} onUploadOpen={onUploadOpen} />
-        <SignInModal isOpen={signInOpen} onClose={onSignInClose} />
-        <UploadModal isOpen={uploadOpen} onClose={onUploadClose} />
-        {children}
-        <Footer />
-      </Container>
-    </>
+    <Container>
+      <NavBar onSignInOpen={onSignInOpen} onUploadOpen={onUploadOpen} />
+      <SignInModal isOpen={signInOpen} onClose={onSignInClose} />
+      <UploadModal isOpen={uploadOpen} onClose={onUploadClose} />
+      {children}
+      <Footer />
+    </Container>
   );
 };
 

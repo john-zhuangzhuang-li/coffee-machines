@@ -25,7 +25,7 @@ const Footer = () => {
         />
       </Link>
       <Heading as="h6" size="xs">
-        Build by John Li for 💪 exercises
+        Built by John Li for 💪 exercises
       </Heading>
     </Flex>
   );
