@@ -18,6 +18,8 @@ import { imgDataModel } from "../util/types";
 import useLoadSize from "../util/useLoadSize";
 import { TEST_USER_EMAIL, IMG_LIST_PATH, FETCH_URL_SAFE } from "../util/util";
 
+import Head from "next/head";
+
 const Home: NextPage = ({
   initialList,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -103,6 +105,9 @@ const Home: NextPage = ({
 
   return (
     <UserProvider>
+      <Head>
+        <title>Cup Bottomless</title>
+      </Head>
       <Layout>
         <Header />
         <Main
